@@ -76,8 +76,8 @@ This project is licensed under the [MIT License](LICENSE).
 
 For inquiries or support, please contact:
 
-- Project Lead: Moeez Muslim (moeez.muslim@example.com)
-- Scrum Master: Nouman Amjad (nouman.amjad@example.com)
-- Scrum Team: Jahanzaib Ahmad (jahanzaib.ahmad@example.com)
+- Project Lead: Moeez Muslim (i210490@nu.edu.pk)
+- Scrum Master: Nouman Amjad (i210853@nu.edu.pk)
+- Scrum Team: Jahanzaib Ahmad (i210792@nu.edu.pk)
 
 Feel free to create [GitHub Issues](https://github.com/your-username/fast-events-portal/issues) for bug reports, feature requests, or general feedback.
