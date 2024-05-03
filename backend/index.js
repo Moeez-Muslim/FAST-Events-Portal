@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import eventRoute from "./routes/eventRoutes.js";
 import loginRoute from "./routes/LogIn.js"
 import signupRoute from "./routes/SignUp.js";
+import userRoute from "./routes/userRoutes.js"
 import cors from "cors"
 import dotenv from "dotenv";
 
@@ -25,6 +26,7 @@ app.get('/', (request,response) => {
 app.use('/events', eventRoute);
 app.use('/login', loginRoute);
 app.use('/signup', signupRoute);
+app.use('/user', userRoute);
 
 mongoose.connect(mongoDBurl)
 .then(()=>{

@@ -35,7 +35,7 @@ router.post("/", async (request, response) => {
                 userId: user._id,
                 CNIC: user.CNIC,
             },
-            JWT_SECRET_KEY,
+            process.env.JWT_SECRET_KEY,
             {
                 expiresIn: "1h", // Set token expiration time
             }
