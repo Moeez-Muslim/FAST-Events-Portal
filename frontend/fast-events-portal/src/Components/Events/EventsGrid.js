@@ -4,6 +4,7 @@ import Spinner from '../Spinner';
 import axios from 'axios';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import NavComp from '../Navs/NavComp';
 
 function EventsGrid() {
   const [events, setEvents] = useState([]);
@@ -31,6 +32,7 @@ function EventsGrid() {
 
   return (
     <div className="container" style={{ textAlign: 'center' }}>
+      <NavComp/>
       <h1>Events</h1>
 
       {loading ? (

@@ -1,12 +1,12 @@
 import './App.css';
-import RegisterText from './Components/Register/RegisterText'
-import AddEventForm from './Components/AddEvent/AddEventForm';
 import EventsGrid from './Components/Events/EventsGrid';
-import NavComp from './Components/NavComp';
+import NavComp from './Components/Navs/NavComp';
 import MyEvents from './Components/MyEvents/MyEvents';
+import LogIn from "./Components/Register/LogIn"
 import OrganizerDashboard from './Components/Organizer/OrganizerDashboard';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import EventDetails from './Components/Events/EventDetails';
+import AddEvent from './Components/Events/AddEvent';
 
 
 function App() {
@@ -23,16 +23,16 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <NavComp/>
         <Routes>
-          <Route exact path='/' element={<EventsGrid/>} />
+          <Route exact path='/' element={<LogIn/>} />
+          <Route path='/events' element={<EventsGrid/>} />
           <Route path='/my-events' element={<MyEvents/>} />
           <Route path='/organizer' element={<OrganizerDashboard/>} />
           <Route path='/events/details/:id' element={<EventDetails/>} />
         </Routes>
       </div>
     </BrowserRouter>
-   // <EventDetails event = {event}/>
+    //<EventsGrid/>
   );
 }
 

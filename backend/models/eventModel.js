@@ -1,39 +1,51 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const eventSchema = mongoose.Schema(
     {
-        title:{
-            type:String, 
-            required:true
+        title: {
+            type: String,
+            required: true,
         },
-        description:{
-            type:String, 
-            required:true
+        description: {
+            type: String,
+            required: true,
         },
-        imageURL:{
-            type:String, 
-            required:true
+        imageURL: {
+            type: String,
+            required: true,
         },
-        dateTime:{
-            type:Date, 
-            required:true
+        dateTime: {
+            type: Date,
+            required: true,
         },
-        ticketsAvailable:{
-            type:Number, 
-            required:true
+        totalTickets: {
+            type: Number,
+            required: true,
         },
-        venue:{
-            type:String, 
-            required:true
+        venue: {
+            type: String,
+            required: true,
         },
-        registered: { 
-            type: [String], 
-            default: []
-        }, // Array of CNICs
-        organizers: { 
-            type:[String], 
-            default: []
-        }  // Array of organizers
+        registered: {
+            type: [String],
+            default: [],
+        }, // Array of CNICs or user IDs
+        feedbacks: [
+            {
+                user: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'userSchema', // Reference to User who gave feedback
+                },
+                date: {
+                    type: Date,
+                    default: Date.now, // Default to the current date
+                },
+                feedbackText: {
+                    type: String,
+                    required: true,
+                },
+            },
+        ], // List of feedback entries
     },
     {
         timestamps: true, // Adds createdAt and updatedAt timestamps

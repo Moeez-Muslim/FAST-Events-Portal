@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import Spinner from '../Spinner';
+import NavComp from '../Navs/NavComp';
 import axios from 'axios';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -32,10 +33,11 @@ export default function EventDetails() {
   // If event is successfully fetched, render the content
   if (event) {
     return (
-      <div className="container" style={{ textAlign: 'center' }}>
+      <div className="container-fluid" style={{ textAlign: 'center' }}>
+      <NavComp/>
           { loading ? (<Spinner/>
         ) : (
-          <div className="container" style={{ textAlign: 'center' }}>
+          <div className="container-fluid" style={{ textAlign: 'center' }}>
             {/* Carousel with a fixed height */}
             <div
               id="carouselExampleIndicators"
@@ -99,17 +101,8 @@ export default function EventDetails() {
               <p><strong>Date & Time:</strong> {moment(event.dateTime).format('MMMM Do YYYY, h:mm a')}</p>
               <p><strong>Venue:</strong> {event.venue}</p>
               <p><strong>Description:</strong> {event.description}</p>
-              <p><strong>Tickets Available:</strong> {event.ticketsAvailable}</p>
+              <p><strong>Tickets Available:</strong> {event.totalTickets - event.registered.length}</p>
               
-              {/* List of organizers */}
-              {event.organizers && event.organizers.length > 0 && (
-                <div>
-                  <strong>Organizers:</strong>
-                    {event.organizers.map((organizer, index) => (
-                      <span key={index}> {organizer}, </span>
-                    ))}
-                </div>
-              )}
             </div>
           </div>
         )}
