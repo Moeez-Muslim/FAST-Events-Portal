@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { jwtDecode } from 'jwt-decode';
+
 
 const AddEventForm = () => {
   // State to hold form data
@@ -19,7 +21,25 @@ const AddEventForm = () => {
 
   // Hook for navigation
   const navigate = useNavigate();
-  
+
+  // Variable to hold the user ID
+  const [userId, setUserId] = useState(null);
+
+  // Effect to extract user ID from token
+  useEffect(() => {
+    const token = localStorage.getItem('token'); // Retrieve the token from local storage
+    if (token) {
+      try {
+        const decoded = jwtDecode(token); // Decode the token
+        setUserId(decoded.userId); // Extract userId and store it in state
+      } catch (e) {
+        console.error('Invalid token', e);
+      }
+    } else {
+      console.warn('No token found in local storage');
+    }
+  }, []); // Empty dependency array to run this effect only once when component mounts
+
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
@@ -46,6 +66,14 @@ const AddEventForm = () => {
 
       // Reset form data if submission is successful
       if (response.status === 201) {
+
+        const eventId = response.data._id; // Get the created event ID
+
+        // Then, associate the event with the organizer
+        await axios.post(`http://localhost:5555/organizers/${userId}/events`, {
+          eventId,
+        });
+
         setFormData({
           title: '',
           description: '',

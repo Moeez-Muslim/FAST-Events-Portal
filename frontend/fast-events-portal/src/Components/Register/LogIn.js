@@ -4,6 +4,7 @@ import axios from 'axios'; // To send HTTP requests
 import BrandNav from '../Navs/BrandNav';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap is included
 
+
 export default function LogIn() {
   const myStyle = {
     backgroundImage:
@@ -19,6 +20,7 @@ export default function LogIn() {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate(); // Use navigate to change routes
+
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent page reload
@@ -72,7 +74,7 @@ export default function LogIn() {
         </div>
         {errorMessage && <p className='text-danger'>{errorMessage}</p>}
         <div className="d-grid gap-2 col-6 mx-auto">
-          <button type="submit" className="btn btn-outline-light">Create</button>
+          <button type="submit" className="btn btn-outline-light">LogIn</button>
           <Link to="/signup" className="btn btn-dark">Sign Up</Link>
         </div>
       </form>
