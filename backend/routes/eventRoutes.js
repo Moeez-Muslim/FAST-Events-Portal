@@ -205,4 +205,28 @@ router.post('/:eventId/register', async (request, response) => {
     }
 });
 
+// Route to get all Events for a specific user
+router.get('/:userId/events', async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Find all events where the 'registered' list contains the given user ID
+        const userEvents = await Event.find({ registered: userId });
+
+        if (userEvents.length === 0) {
+            return res.status(404).send({
+                message: `No events found for user with ID ${userId}`,
+            });
+        }
+
+        return res.status(200).json({
+            count: userEvents.length,
+            data: userEvents,
+        });
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).send({ message: error.message });
+    }
+});
+
 export default router;

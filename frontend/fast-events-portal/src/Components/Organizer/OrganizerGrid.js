@@ -61,7 +61,7 @@ function OrganizerGrid() {
       {loading ? (
         <Spinner /> 
       ) : (
-        <div className="row">
+        <div className="row mt-5">
           {events && events.length > 0 ? (
             events.map((event) => (
               <div key={event._id} className="col-sm-4 mb-4">

@@ -29,7 +29,7 @@ const eventSchema = mongoose.Schema(
         registered: {
             type: [String],
             default: [],
-        }, // Array of CNICs or user IDs
+        }, // Array of user IDs
         feedbacks: [
             {
                 user: {

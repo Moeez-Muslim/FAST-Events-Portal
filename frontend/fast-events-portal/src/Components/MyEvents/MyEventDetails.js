@@ -148,9 +148,8 @@ export default function EventDetails() {
                 type="button"
                 className="btn btn-outline-dark"
                 onClick={handleRegister}
-                disabled={availableTickets === 0} // Disable if no tickets available
               >
-                Register
+                Cancel Registration
               </button>
             </div>
           </div>

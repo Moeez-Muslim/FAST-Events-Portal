@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import EventDetails from './Components/Events/EventDetails';
 import AddEvent from './Components/Events/AddEvent';
 import SignUp from './Components/Register/SignUp';
+import MyEventDetails from './Components/MyEvents/MyEventDetails';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path='/organizer' element={<OrganizerGrid/>} />
             <Route path='/events/details/:id' element={<EventDetails/>} />
             <Route path='/create-event' element={<AddEvent/>} />
+            <Route path='/my-event/details/:id' element={<MyEventDetails/>} />
           </Routes>
         </div>
       </BrowserRouter>
