@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import Spinner from '../Spinner';
-import axios from 'axios';
-import moment from 'moment';
-import { Link } from 'react-router-dom';
-import NavComp from '../Navs/NavComp';
+import React, { useEffect, useState } from "react";
+import Spinner from "../Spinner";
+import axios from "axios";
+import moment from "moment";
+import { Link } from "react-router-dom";
+import NavComp from "../Navs/NavComp";
 
 function EventsGrid() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // New state to track the search term
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get('http://localhost:5555/events')
+      .get("http://localhost:5555/events")
       .then((response) => {
         setEvents(response.data.data);
         setLoading(false);
@@ -24,45 +24,53 @@ function EventsGrid() {
       });
   }, []);
 
-  const truncateText = (text, limit) => {
-    // Get the first 10 words of the description
-    const words = text.split(' ');
-    return words.length > limit ? words.slice(0, limit).join(' ') + '...' : text;
+  const handleSearch = (term) => {
+    setSearchTerm(term); // Update the search term
   };
 
+  const truncateText = (text, limit) => {
+    const words = text.split(" ");
+    return words.length > limit ? words.slice(0, limit).join(" ") + "..." : text;
+  };
+
+  // Filter events based on the search term
+  const filteredEvents = events.filter((event) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      event.title.toLowerCase().includes(searchLower) ||
+      event.description.toLowerCase().includes(searchLower) ||
+      moment(event.dateTime)
+        .format("MMMM Do YYYY, h:mm a")
+        .toLowerCase()
+        .includes(searchLower)
+    );
+  });
+
   return (
-    <div className="container" style={{ textAlign: 'center' }}>
-      <NavComp/>
+    <div className="container" style={{ textAlign: "center" }}>
+      <NavComp onSearch={handleSearch} /> {/* Pass the search handler */}
       <h1>Events</h1>
 
       {loading ? (
         <Spinner />
       ) : (
         <div className="row">
-          {events && events.length > 0 ? (
-            events.map((event) => (
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map((event) => (
               <div key={event._id} className="col-sm-4 mb-4">
                 <div className="card">
-                  {/* Display the image at the top of the card */}
                   <img
                     src={event.imageURL}
                     className="card-img-top"
                     alt={`${event.title}`}
                   />
-
-                  {/* Event details in the card body */}
                   <div className="card-body">
                     <h5 className="card-title">{event.title}</h5>
-
-                    {/* Display truncated description */}
                     <p className="card-text">{truncateText(event.description, 10)}</p>
-
-                    {/* Display date and time */}
                     <p className="card-text">
-                      <strong>Date:</strong> {moment(event.dateTime).format('MMMM Do YYYY, h:mm a')}
+                      <strong>Date:</strong> {moment(event.dateTime).format("MMMM Do YYYY, h:mm a")}
                     </p>
-
-                    <Link to={'/events/details/' + event._id} className="btn btn-dark">
+                    <Link to={"/events/details/" + event._id} className="btn btn-dark">
                       Details
                     </Link>
                   </div>

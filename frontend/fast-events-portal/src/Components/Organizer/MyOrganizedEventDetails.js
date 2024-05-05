@@ -4,9 +4,10 @@ import NavComp from '../Navs/NavComp';
 import axios from 'axios';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import { Link } from 'react-router-dom';
 
-export default function EventDetails() {
+
+export default function MyOrganizedEventDetails() {
   const [event, setEvent] = useState(null); // Initialize event as null
   const [loading, setLoading] = useState(true); // Start in loading state
   const [error, setError] = useState(null); // To handle potential errors
@@ -14,25 +15,37 @@ export default function EventDetails() {
   const { id } = useParams(); // Get the event ID from the route parameters
   const navigate = useNavigate(); // Initialize navigate function
 
-  // Function to handle registration
-  const handleRegister = async () => {
+  const handleDeletion = async () => {
+    setLoading(true);
+  
     try {
-      const token = localStorage.getItem('token'); // Get token from local storage
-      const decoded = jwtDecode(token); // Decode the token
-      const userId = decoded.userId; // Extract userId from the decoded token
-
-      // Send POST request to register the user
-      const response = await axios.post(
-        `http://localhost:5555/events/${id}/register`,
-        { userId } // Sending the userId in the request body
-      );
-
-      setSuccess(response.data.message); // Set the success message
-      navigate('/my-events'); // Navigate to "/my-events" on success
+      // Attempt to delete the event from the first endpoint
+      const response1 = await axios.delete(`http://localhost:5555/events/${id}`);
+      
+      if (response1.status >= 200 && response1.status < 300) {
+        // If the first deletion is successful, proceed to the second endpoint
+        const response2 = await axios.delete(`http://localhost:5555/organizer/events/${id}`);
+        
+        if (response2.status >= 200 && response2.status < 300) {
+          setSuccess("Event deleted successfully.");
+          setTimeout(() => {
+            navigate('/organizer'); // Navigate back after a successful delete
+          }, 1000);
+        } else {
+          // If the second deletion fails, provide a more detailed error message
+          setError("Error deleting event from organizers. Please try again.");
+        }
+      } else {
+        setError("Error deleting event from the main event list. Please try again.");
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'An error occurred'); // Set error message
+      console.error("Deletion error:", err);
+      setError("An error occurred while deleting the event. Please try again.");
+    } finally {
+      setLoading(false); // Always stop loading regardless of the outcome
     }
   };
+  
 
   // Fetch event details from the server
   useEffect(() => {
@@ -137,17 +150,26 @@ export default function EventDetails() {
               <p>
                 <strong>Description:</strong> {event.description}
               </p>
+              <p>
+                <strong>Tickets Available:</strong> {availableTickets}
+              </p>
             </div>
 
             <div className="d-grid gap-2 col-6 mx-auto my-5">
-              {success && <div className="alert alert-success">{success}</div>} {/* Display success message */}
+              <Link
+                to={`/organizer/edit-event/${id}`}
+                className="btn btn-outline-dark"
+              >
+                Edit Event
+              </Link>
               <button
                 type="button"
                 className="btn btn-outline-dark"
-                onClick={handleRegister}
+                onClick={handleDeletion}
               >
-                Cancel Registration
+                Delete Event
               </button>
+              {success && <div className="alert alert-success">{success}</div>}
             </div>
           </div>
         )}

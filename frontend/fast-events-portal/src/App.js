@@ -10,6 +10,8 @@ import EventDetails from './Components/Events/EventDetails';
 import AddEvent from './Components/Events/AddEvent';
 import SignUp from './Components/Register/SignUp';
 import MyEventDetails from './Components/MyEvents/MyEventDetails';
+import MyOrganizedEventDetails from './Components/Organizer/MyOrganizedEventDetails';
+import EditEvent from './Components/Organizer/EditEvent';
 
 
 function App() {
@@ -25,6 +27,9 @@ function App() {
             <Route path='/events/details/:id' element={<EventDetails/>} />
             <Route path='/create-event' element={<AddEvent/>} />
             <Route path='/my-event/details/:id' element={<MyEventDetails/>} />
+            <Route path='/my-event-organized/details/:id' element={<MyOrganizedEventDetails/>} />
+            <Route path='/organizer/edit-event/:id' element={<EditEvent/>} />
+            
           </Routes>
         </div>
       </BrowserRouter>

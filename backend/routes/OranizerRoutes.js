@@ -84,4 +84,42 @@ router.get('/:organizerId/events', async (req, res) => {
     }
 });
 
+// Route to delete an event from all organizers
+router.delete('/events/:eventId', async (req, res) => {
+    try {
+        const { eventId } = req.params;
+
+        // Check if the event exists
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        // Find all organizers containing this event in their list
+        const organizers = await Organizer.find({
+            referenceToListOfEvents: { $in: [eventId] },
+        });
+
+        // If no organizers are found, the event is not associated with any organizer
+        if (organizers.length === 0) {
+            return res.status(404).json({ message: 'No organizers found for this event' });
+        }
+
+        // Loop through all organizers and remove the event
+        for (const organizer of organizers) {
+            const index = organizer.referenceToListOfEvents.indexOf(eventId);
+            if (index > -1) {
+                organizer.referenceToListOfEvents.splice(index, 1); // Remove the event
+                await organizer.save(); // Save the updated organizer
+            }
+        }
+
+        return res.status(200).json({ message: 'Event removed from all organizers' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Error removing event from organizers' });
+    }
+});
+
+
 export default router;
