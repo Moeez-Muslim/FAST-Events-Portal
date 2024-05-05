@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { jwtDecode } from 'jwt-decode';
+import NavComp from '../Navs/NavComp';
 
 
 const AddEventForm = () => {
@@ -43,7 +44,7 @@ const AddEventForm = () => {
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
-
+    console.log({userId})
     // Clear previous errors
     setErrors([]);
 
@@ -70,7 +71,7 @@ const AddEventForm = () => {
         const eventId = response.data._id; // Get the created event ID
 
         // Then, associate the event with the organizer
-        await axios.post(`http://localhost:5555/organizers/${userId}/events`, {
+        await axios.post(`http://localhost:5555/organizer/${userId}/events`, {
           eventId,
         });
 
@@ -84,7 +85,7 @@ const AddEventForm = () => {
         });
         setErrors([]); // Clear errors on success
         // Navigate to the /events route
-        navigate('/events'); // Redirect to a specific route
+        navigate('/organizer'); // Redirect to a specific route
       }
     } catch (error) {
       setErrors([error.response.data.message || 'An error occurred while creating the event']);
@@ -92,7 +93,9 @@ const AddEventForm = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container">
+      <NavComp/>
+      <br/><br/>
       <h2>Create a New Event</h2>
 
       {errors.length > 0 && (

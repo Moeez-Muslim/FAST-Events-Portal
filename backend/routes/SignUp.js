@@ -1,63 +1,72 @@
 import express from 'express';
-import { Credentials } from '../models/CredentialModel.js';
 import { User } from '../models/UserModel.js';
+import { Credentials } from '../models/CredentialModel.js';
 
 const router = express.Router();
 
-// Route for signup (storing new credentials and user information)
-router.post('/', async (request, response) => {
-    try {
-        const {
-            CNIC,
-            password,
-            firstName,
-            lastName,
-            email,
-            phoneNumber,
-            dob,
-            gender,
-        } = request.body;
+router.post('/', async (req, res) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      dob,
+      gender,
+      cnic,
+      isOrganizer,
+      socialMediaLinks,
+      password,
+    } = req.body;
 
-        // Check if all required fields are provided
-        if (!CNIC || !password || !firstName || !lastName || !email || !phoneNumber || !dob || !gender) {
-            return response.status(400).send({ message: 'All required fields must be provided' });
-        }
-
-        // Check if the user with the same CNIC or email already exists
-        const existingUser = await Credentials.findOne({ CNIC });
-        const existingEmail = await User.findOne({ email });
-
-        if (existingUser) {
-            return response.status(409).send({ message: 'User with this CNIC already exists' });
-        }
-
-        if (existingEmail) {
-            return response.status(409).send({ message: 'User with this email already exists' });
-        }
-
-        // Create and save new credentials
-        const newCredentials = new Credentials({
-            CNIC,
-            password,
-        });
-        await newCredentials.save();
-
-        // Create and save new user details
-        const newUser = new User({
-            firstName,
-            lastName,
-            email,
-            phoneNumber,
-            dob,
-            gender,
-        });
-        await newUser.save();
-
-        return response.status(201).send({ message: 'User registered successfully' });
-    } catch (error) {
-        console.error(error);
-        return response.status(500).send({ message: 'Internal server error' });
+    // Validate required fields
+    if (!firstName || !lastName || !email || !phoneNumber || !dob || !gender || !cnic || !password) {
+      return res.status(400).json({ error: 'Missing required fields' });
     }
+
+    // Check if email or CNIC already exists
+    const existingUser = await User.findOne({ email });
+    const existingCredential = await Credentials.findOne({ CNIC: cnic });
+
+    if (existingUser) {
+      return res.status(409).json({ error: 'Email already exists' });
+    }
+
+    if (existingCredential) {
+      return res.status(409).json({ error: 'CNIC already exists' });
+    }
+
+    // Create new user
+    const newUser = new User({
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      dob,
+      gender,
+      cnic,
+      isOrganizer: isOrganizer || false, // Default to false if not provided
+      socialMediaLinks: socialMediaLinks || [],
+    });
+
+    await newUser.save();
+
+    // Create corresponding credential
+    const newCredential = new Credentials({
+      CNIC: cnic,
+      password,
+    });
+
+    await newCredential.save();
+
+    // Return success response
+    res.status(201).json({
+      message: 'User created successfully',
+      userId: newUser._id,
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 export default router;

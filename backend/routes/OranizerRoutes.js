@@ -17,11 +17,6 @@ router.post('/:organizerId/events', async (req, res) => {
             return res.status(404).json({ message: 'User (organizer) not found' });
         }
 
-        // Check if the event exists
-        const event = await Event.findById(eventId);
-        if (!event) {
-            return res.status(404).json({ message: 'Event not found' });
-        }
 
         // Check if this relationship already exists in OrganizerModel
         const existingOrganizer = await Organizer.findOne({
